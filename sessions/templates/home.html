@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Угадай число{% endblock %}
+
+{% block content %}
+    {% if game.creator == player.id and game.right_answer is not None and game.is_finished == False  %}
+        <h1>Загаданное число {{ game.right_answer }}</h1>
+        Второй игрок будет пытаться отгадать его.
+    {% elif game.creator == player.id and game.is_finished == True %}
+        <h1>Загаданное число {{ game.right_answer }}</h1>
+        Второй игрок будет пытаться отгадать его.
+        <h1>Ваше число угадали c {{game_info.try_counts}} попытки!</h1>
+    {% elif game.right_answer is None %}
+        <div class="container">
+            <div class="header">
+                <h1>Игра "Угадай число"</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <label for="number">Введите число: </label>
+                    <input id="number" type="number" name="number" value="{{ number }}">
+                    <input type="submit" value="OK">
+                </form>
+            </div>
+        </div>
+    {% elif game.creator != player.id and player.search_number is None %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <label for="number">Введите число: </label>
+            <input id="number" type="number" name="number" value="{{ number }}">
+            <input type="submit" value="OK">
+        </form>
+    {% elif game.creator != player.id and player.search_number < game.right_answer %}
+         <form action="" method="POST">
+            {% csrf_token %}
+            <label for="number">Введите число: </label>
+            <input id="number" type="number" name="number" value="{{ number }}">
+            <input type="submit" value="OK">
+        </form>
+        <h1>Загаданное число больше {{ player.search_number }}</h1>
+    {% elif game.creator != player.id and player.search_number > game.right_answer %}
+         <form action="" method="POST">
+            {% csrf_token %}
+            <label for="number">Введите число: </label>
+            <input id="number" type="number" name="number" value="{{ number }}">
+            <input type="submit" value="OK">
+        </form>
+        <h1>Загаданное число меньше {{ player.search_number }}</h1>
+    {% elif game.creator != player.id and player.search_number == game.right_answer %}
+         <form action="" method="POST">
+            {% csrf_token %}
+            <label for="number">Введите число: </label>
+            <input id="number" type="number" name="number" value="{{ number }}">
+            <input type="submit" value="OK">
+        </form>
+        <h1>Вы угадали число</h1>
+    {% endif %}
+{% endblock %}
